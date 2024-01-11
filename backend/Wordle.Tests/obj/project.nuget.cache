@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "qKtiGP0jsnwfhfThycEncx0XzQvmA1QZ4aHs149lidAtIpo8w0nWC7hA93mvNi8NH/Y07b086aPgeXWL2kxcJg==",
+  "dgSpecHash": "1Qt9TY5CD4+aE9AnKgYTZLct6EJMLIvhC+d5TgielaSelHxTgDYYef1Yy5lcKyjZaCzhPMQTWS+rPDCb7KKlWg==",
   "success": true,
   "projectFilePath": "/Users/salt-dev/Desktop/norwegian-wordle-new/backend/Wordle.Tests/Wordle.Tests.csproj",
   "expectedPackageFiles": [
