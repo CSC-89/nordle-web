@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "L3MELriQix8SLWwfNi4KNDyT+8JENz/pHb4n9J+vQbGk3L70+n/zKIOGtJxEQWaT9UtFK82c3mTcET7/zTHNZg==",
+  "success": true,
+  "projectFilePath": "/Users/salt-dev/Desktop/norwegian-wordle-new/backend/Wordle.Api/Wordle.Api.csproj",
+  "expectedPackageFiles": [
+    "/Users/salt-dev/.nuget/packages/microsoft.extensions.apidescription.server/6.0.5/microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "/Users/salt-dev/.nuget/packages/microsoft.openapi/1.2.3/microsoft.openapi.1.2.3.nupkg.sha512",
+    "/Users/salt-dev/.nuget/packages/swashbuckle.aspnetcore/6.5.0/swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
+    "/Users/salt-dev/.nuget/packages/swashbuckle.aspnetcore.swagger/6.5.0/swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",
+    "/Users/salt-dev/.nuget/packages/swashbuckle.aspnetcore.swaggergen/6.5.0/swashbuckle.aspnetcore.swaggergen.6.5.0.nupkg.sha512",
+    "/Users/salt-dev/.nuget/packages/swashbuckle.aspnetcore.swaggerui/6.5.0/swashbuckle.aspnetcore.swaggerui.6.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}
