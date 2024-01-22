@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { keyboard as keys } from "../../keys/keys";
-import './Main.css'
+import "./Main.css";
+
+type Guess = {
+  letter: string;
+  color: string;
+};
 
 const Main = () => {
   const [word, setWord] = useState<string>("");
@@ -82,7 +87,7 @@ const Main = () => {
 
   const deleteLetter = () => {
     if (currentTile > 0) {
-      setCurrentTile(currentTile - 1)
+      setCurrentTile(currentTile - 1);
       const tile = document.getElementById(
         "guessRow-" + currentRow + "-tile-" + currentTile
       );
@@ -104,18 +109,19 @@ const Main = () => {
             return;
           } else {
             flipTile();
-            if (wordle == guess) {
+            if (word == guess) {
               showMessage("You got it!");
-              isGameOver = true;
+              setIsGameOver(true);
             } else {
               if (currentRow >= 5) {
-                isGameOver = true;
+                setIsGameOver(true);
+
                 showMessage("Game Over..");
                 return;
               }
               if (currentRow < 5) {
-                currentRow++;
-                currentTile = 0;
+                setCurrentRow(currentRow + 1);
+                setCurrentTile(0);
               }
             }
           }
@@ -123,54 +129,52 @@ const Main = () => {
     }
   };
 
-  const showMessage = message => {
-      const messageElement = document.createElement('p');
-      messageElement.textContent = message;
-      messageDisplay.append(messageElement);
-      setTimeout(() => {
-        messageDisplay.removeChild(messageElement);
-      }, 2000);
+  const showMessage = (message: string) => {
+    const messageElement = document.createElement("p");
+    messageElement.textContent = message;
+    messageDisplay!.append(messageElement);
+    setTimeout(() => {
+      messageDisplay!.removeChild(messageElement);
+    }, 2000);
+  };
 
+  const addColorToKey = (keyLetter: string, color: string) => {
+      const key = document.getElementById(keyLetter)
+      key!.classList.add(color)
   }
-
-  // const addColorToKey = (keyLetter, color) => {
-  //     const key = document.getElementById(keyLetter)
-  //     key.classList.add(color)
-  // }
 
   const flipTile = () => {
+    let checkWordle = word;
+    const guess: Guess[] = [];
+    const rowTiles = document.getElementById(
+      "guessRow-" + currentRow
+    )!.childNodes as any;
 
-      let checkWordle = word;
-      const guess: [] = [];
-      const rowTiles = document.getElementById('guessRow-' + currentRow).childNodes;
+    rowTiles.forEach((tile: any) => {
+      guess.push({ letter: tile.getAttribute("data"), color: "grey-overlay" });
+    });
 
-      rowTiles.forEach(tile => {
-          guess.push({letter: tile.getAttribute('data'), color: 'grey-overlay'})
-      })
+    guess.forEach((guess, index) => {
+      if (guess.letter == word[index]) {
+        guess.color = "green-overlay";
+        checkWordle = checkWordle.replace(guess.letter, "");
+      }
+    });
 
-      guess.forEach((guess, index) => {
-        if (guess.letter == wordle[index]) {
-            guess.color = 'green-overlay';
-            checkWordle= checkWordle.replace(guess.letter, '');
-        }
-      })
+    guess.forEach((guess) => {
+      if (checkWordle.includes(guess.letter)) {
+        guess.color = "yellow-overlay";
+        checkWordle = checkWordle.replace(guess.letter, "");
+      }
+    });
 
-      guess.forEach(guess => {
-        if(checkWordle.includes(guess.letter)) {
-          guess.color = 'yellow-overlay';
-          checkWordle= checkWordle.replace(guess.letter, '');
-        }
-      })
-
-      rowTiles.forEach((tile, index) => {
-
-          setTimeout(() => {
-              tile.classList.add(guess[index].color, 'flip')
-              addColorToKey(guess[index].letter, guess[index].color)
-
-          }, 500 * index)
-      })
-  }
+    rowTiles.forEach((tile: any, index: number) => {
+      setTimeout(() => {
+        tile.classList.add(guess[index].color, "flip");
+        addColorToKey(guess[index].letter, guess[index].color);
+      }, 500 * index);
+    });
+  };
 
   // //Restart button
   // const restartHandler = () => {
@@ -199,20 +203,40 @@ const Main = () => {
         {guessRows.map((elm, i) => {
           return (
             <div key={i} id={`guessRow-${i}`} className="flex">
-              <div className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-white m-1" id={`guessRow-${i}-tile-0`}></div>
-              <div className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-white m-1" id={`guessRow-${i}-tile-1`}></div>
-              <div className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-white m-1" id={`guessRow-${i}-tile-2`}></div>
-              <div className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-white m-1" id={`guessRow-${i}-tile-3`}></div>
-              <div className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-white m-1" id={`guessRow-${i}-tile-4`}></div>
+              <div
+                className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1"
+                id={`guessRow-${i}-tile-0`}
+              ></div>
+              <div
+                className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1"
+                id={`guessRow-${i}-tile-1`}
+              ></div>
+              <div
+                className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1"
+                id={`guessRow-${i}-tile-2`}
+              ></div>
+              <div
+                className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1"
+                id={`guessRow-${i}-tile-3`}
+              ></div>
+              <div
+                className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1"
+                id={`guessRow-${i}-tile-4`}
+              ></div>
             </div>
           );
         })}
       </div>
-      
-      <div className="key-container">
+
+      <div className="key-container w-screen">
         {keys.map((elm) => {
           return (
-            <button id={elm} key={elm} onClick={() => handleClick(elm)}>
+            <button
+              className="w-6 h-6 rounded-md bg-gray-400 m-1 text-white text-sm"
+              id={elm}
+              key={elm}
+              onClick={() => handleClick(elm)}
+            >
               {elm}
             </button>
           );
