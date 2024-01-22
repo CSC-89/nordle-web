@@ -53,7 +53,7 @@ const Main = () => {
   //     keyboard.append(buttonElement);
   // })
 
-  const handleClick = (letter) => {
+  const handleClick = (letter: string) => {
     if (!isGameOver) {
       if (letter === "BACK") {
         deleteLetter();
@@ -67,27 +67,27 @@ const Main = () => {
     }
   };
 
-  const addLetter = (letter) => {
+  const addLetter = (letter: string) => {
     if (currentTile < 5 && currentRow < 6) {
       const tile = document.getElementById(
         "guessRow-" + currentRow + "-tile-" + currentTile
       );
-      tile.textContent = letter;
+      tile!.textContent = letter;
       guessRows[currentRow][currentTile] = letter;
-      tile.setAttribute("data", letter);
-      currentTile++;
+      tile!.setAttribute("data", letter);
+      setCurrentTile(currentTile + 1);
     }
   };
 
   const deleteLetter = () => {
     if (currentTile > 0) {
-      currentTile--;
+      setCurrentTile(currentTile - 1)
       const tile = document.getElementById(
         "guessRow-" + currentRow + "-tile-" + currentTile
       );
-      tile.textContent = "";
+      tile!.textContent = "";
       guessRows[currentRow][currentTile] = "";
-      tile.setAttribute("data", "");
+      tile!.setAttribute("data", "");
     }
   };
 
@@ -95,7 +95,7 @@ const Main = () => {
     const guess = guessRows[currentRow].join("");
     console.log(guess);
     if (currentTile > 4) {
-      fetch(`http://localhost:8000/check/?word=${guess}`)
+      fetch(`https://localhost:7234/WordleGame/check/?word=${guess}`)
         .then((response) => response.json())
         .then((json) => {
           if (json == "Entry word not found") {
@@ -122,54 +122,54 @@ const Main = () => {
     }
   };
 
-  // const showMessage = message => {
-  //     const messageElement = document.createElement('p');
-  //     messageElement.textContent = message;
-  //     messageDisplay.append(messageElement);
-  //     setTimeout(() => {
-  //       messageDisplay.removeChild(messageElement);
-  //     }, 2000);
+  const showMessage = message => {
+      const messageElement = document.createElement('p');
+      messageElement.textContent = message;
+      messageDisplay.append(messageElement);
+      setTimeout(() => {
+        messageDisplay.removeChild(messageElement);
+      }, 2000);
 
-  // }
+  }
 
   // const addColorToKey = (keyLetter, color) => {
   //     const key = document.getElementById(keyLetter)
   //     key.classList.add(color)
   // }
 
-  // const flipTile = () => {
+  const flipTile = () => {
 
-  //     let checkWordle = wordle;
-  //     const guess = [];
-  //     const rowTiles = document.getElementById('guessRow-' + currentRow).childNodes;
+      let checkWordle = word;
+      const guess: [] = [];
+      const rowTiles = document.getElementById('guessRow-' + currentRow).childNodes;
 
-  //     rowTiles.forEach(tile => {
-  //         guess.push({letter: tile.getAttribute('data'), color: 'grey-overlay'})
-  //     })
+      rowTiles.forEach(tile => {
+          guess.push({letter: tile.getAttribute('data'), color: 'grey-overlay'})
+      })
 
-  //     guess.forEach((guess, index) => {
-  //       if (guess.letter == wordle[index]) {
-  //           guess.color = 'green-overlay';
-  //           checkWordle= checkWordle.replace(guess.letter, '');
-  //       }
-  //     })
+      guess.forEach((guess, index) => {
+        if (guess.letter == wordle[index]) {
+            guess.color = 'green-overlay';
+            checkWordle= checkWordle.replace(guess.letter, '');
+        }
+      })
 
-  //     guess.forEach(guess => {
-  //       if(checkWordle.includes(guess.letter)) {
-  //         guess.color = 'yellow-overlay';
-  //         checkWordle= checkWordle.replace(guess.letter, '');
-  //       }
-  //     })
+      guess.forEach(guess => {
+        if(checkWordle.includes(guess.letter)) {
+          guess.color = 'yellow-overlay';
+          checkWordle= checkWordle.replace(guess.letter, '');
+        }
+      })
 
-  //     rowTiles.forEach((tile, index) => {
+      rowTiles.forEach((tile, index) => {
 
-  //         setTimeout(() => {
-  //             tile.classList.add(guess[index].color, 'flip')
-  //             addColorToKey(guess[index].letter, guess[index].color)
+          setTimeout(() => {
+              tile.classList.add(guess[index].color, 'flip')
+              addColorToKey(guess[index].letter, guess[index].color)
 
-  //         }, 500 * index)
-  //     })
-  // }
+          }, 500 * index)
+      })
+  }
 
   // //Restart button
   // const restartHandler = () => {
@@ -194,15 +194,15 @@ const Main = () => {
   // restartButton.addEventListener('click', restartHandler);
   return (
     <>
-      <div className="tile-display">
+      <div className="tile-container text-center border border-black my-3 mx-6">
         {guessRows.map((elm, i) => {
           return (
-            <div key={i} id={`guessRow-${i}`}>
-              <div className="tile" id={`guessRow-${i}-tile-0`}></div>
-              <div className="tile" id={`guessRow-${i}-tile-1`}></div>
-              <div className="tile" id={`guessRow-${i}-tile-2`}></div>
-              <div className="tile" id={`guessRow-${i}-tile-3`}></div>
-              <div className="tile" id={`guessRow-${i}-tile-4`}></div>
+            <div key={i} id={`guessRow-${i}`} className="flex">
+              <div className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-white m-1" id={`guessRow-${i}-tile-0`}></div>
+              <div className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-white m-1" id={`guessRow-${i}-tile-1`}></div>
+              <div className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-white m-1" id={`guessRow-${i}-tile-2`}></div>
+              <div className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-white m-1" id={`guessRow-${i}-tile-3`}></div>
+              <div className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-white m-1" id={`guessRow-${i}-tile-4`}></div>
             </div>
           );
         })}
