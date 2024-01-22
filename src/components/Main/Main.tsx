@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { keyboard as keys } from "../../keys/keys";
+import './Main.css'
 
 const Main = () => {
   const [word, setWord] = useState<string>("");
@@ -194,7 +195,7 @@ const Main = () => {
   // restartButton.addEventListener('click', restartHandler);
   return (
     <>
-      <div className="tile-container text-center border border-black my-3 mx-6">
+      <div className="tile-container flex flex-col justify-center items-center text-center border w-72 border-black my-3 mx-auto">
         {guessRows.map((elm, i) => {
           return (
             <div key={i} id={`guessRow-${i}`} className="flex">
@@ -207,16 +208,7 @@ const Main = () => {
           );
         })}
       </div>
-
-      {
-        // keys.forEach(key => {
-        //     const buttonElement = document.createElement('button')
-        //     buttonElement.textContent = key;
-        //     buttonElement.setAttribute('id', key);
-        //     buttonElement.addEventListener('click', () => handleClick(key));
-        //     keyboard.append(buttonElement);
-        // })
-      }
+      
       <div className="key-container">
         {keys.map((elm) => {
           return (
