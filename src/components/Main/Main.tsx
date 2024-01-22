@@ -80,7 +80,7 @@ const Main = () => {
     console.log(guess);
     if (currentTile > 4) {
       axios
-      .get(`https://localhost:7234/WordleGame/check?guess=Hagen`)
+      .get(`https://localhost:7234/WordleGame/check?guess=${guess}`)
       .then((response) => response.data.response)
         .then((response) => {
           if (!response) {
