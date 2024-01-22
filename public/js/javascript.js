@@ -1,4 +1,5 @@
 
+const axios = require('axios')
 
 const tileDisplay = document.querySelector('.tile-container'); 
 const messageDisplay = document.querySelector('.message-container'); 
@@ -7,14 +8,15 @@ const keyboard = document.querySelector('.key-container');
 let wordle;
 
 const getWordle = () => {
-  fetch('http://localhost:8000/word')
-  .then(response => response.json())
-  .then(json => {
-      wordle = json.toUpperCase();
-  }).catch(err => console.log(err))
+  fetch('https://localhost:7234/WordleGame')
+  .then(response => console.log(response))
+//   .then(word => {
+//       wordle = word.toUpperCase();
+//   }).catch(err => console.log(err))
 }
 
 getWordle();
+console.log("Word: ", wordle);
 
 const keys = ['Q','W','E','R','T','Y','U','I','O','P','Å','A','S','D','F','G','H','J','K','L','Ø','Æ','ENTER','Z','X','C','V','B','N','M','BACK']
 
