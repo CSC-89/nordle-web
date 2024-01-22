@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { keyboard as keys } from "../../keys/keys";
 
 const Main = () => {
   const [word, setWord] = useState<string>("");
@@ -22,40 +23,6 @@ const Main = () => {
   }, []);
 
   console.log(word);
-
-  const keys = [
-    "Q",
-    "W",
-    "E",
-    "R",
-    "T",
-    "Y",
-    "U",
-    "I",
-    "O",
-    "P",
-    "Å",
-    "A",
-    "S",
-    "D",
-    "F",
-    "G",
-    "H",
-    "J",
-    "K",
-    "L",
-    "Ø",
-    "Æ",
-    "ENTER",
-    "Z",
-    "X",
-    "C",
-    "V",
-    "B",
-    "N",
-    "M",
-    "BACK",
-  ];
 
   let guessRows = [
     ["", "", "", "", ""],
