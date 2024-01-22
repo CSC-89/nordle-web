@@ -17,7 +17,7 @@ const Main = () => {
 
   const getWordle = () => {
     axios
-      .get("https://localhost:7234/WordleGame")
+      .get("https://localhost:7234/WordleGame/getWord")
       .then((response) => setWord(response.data.word))
       .catch((err) => console.log(err));
   };
@@ -79,10 +79,11 @@ const Main = () => {
     const guess = guessRows[currentRow].join("");
     console.log(guess);
     if (currentTile > 4) {
-      fetch(`https://localhost:7234/WordleGame/check/?word=${guess}`)
-        .then((response) => response.json())
-        .then((json) => {
-          if (json == "Entry word not found") {
+      axios
+      .get(`https://localhost:7234/WordleGame/check?guess=Hagen`)
+      .then((response) => response.data.response)
+        .then((response) => {
+          if (!response) {
             showMessage("Word not in list.");
             return;
           } else {
