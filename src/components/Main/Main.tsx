@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { keyboard as keys } from "../../keys/keys";
 import "./Main.css";
@@ -13,9 +13,7 @@ const Main = () => {
   const [isGameOver, setIsGameOver] = useState(false);
   const [currentRow, setCurrentRow] = useState(0);
   const [currentTile, setCurrentTile] = useState(0);
-  const tileDisplay = document.querySelector(".tile-container");
   const messageDisplay = document.querySelector(".message-container");
-  const keyboard = document.querySelector(".key-container");
 
   const getWordle = () => {
     axios
@@ -26,9 +24,9 @@ const Main = () => {
 
   useEffect(() => {
     getWordle();
+    console.log(word);
   }, []);
 
-  console.log(word);
 
   let guessRows = [
     ["", "", "", "", ""],
@@ -180,7 +178,7 @@ const Main = () => {
   return (
     <>
       <div className="tile-container flex flex-col justify-center items-center text-center border w-72 border-black my-3 mx-auto">
-        {guessRows.map((elm, i) => {
+        {guessRows.map((_elm, i) => {
           return (
             <div key={i} id={`guessRow-${i}`} className="flex">
               <div
