@@ -12,7 +12,7 @@ const Main = () => {
   const [word, setWord] = useState<string>("");
   const [isGameOver, setIsGameOver] = useState(false);
   const [currentRow, setCurrentRow] = useState(0);
-  const [currentTile, setCurrentTile] = useState(0);
+  const [currentTile, setCurrentTile] = useState(1);
   const messageDisplay = document.querySelector(".message-container");
 
   const getWordle = () => {
@@ -52,20 +52,22 @@ const Main = () => {
   };
 
   const addLetter = (letter: string) => {
-    if (currentTile < 5 && currentRow < 6) {
+    if (currentTile <= 5 && currentRow < 6) {
       const tile = document.getElementById(
         "guessRow-" + currentRow + "-tile-" + currentTile
       );
       tile!.textContent = letter;
       guessRows[currentRow][currentTile] = letter;
       tile!.setAttribute("data", letter);
-      setCurrentTile(currentTile + 1);
+
+      if(currentTile < 5) setCurrentTile(currentTile + 1);
     }
   };
 
   const deleteLetter = () => {
     if (currentTile > 0) {
-      setCurrentTile(currentTile - 1);
+      if (currentTile >1) setCurrentTile(currentTile - 1);
+      console.log(currentTile)
       const tile = document.getElementById(
         "guessRow-" + currentRow + "-tile-" + currentTile
       );
@@ -184,10 +186,6 @@ const Main = () => {
             <div key={i} id={`guessRow-${i}`} className="flex">
               <div
                 className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1"
-                id={`guessRow-${i}-tile-0`}
-              ></div>
-              <div
-                className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1"
                 id={`guessRow-${i}-tile-1`}
               ></div>
               <div
@@ -201,6 +199,10 @@ const Main = () => {
               <div
                 className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1"
                 id={`guessRow-${i}-tile-4`}
+              ></div>
+              <div
+                className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1"
+                id={`guessRow-${i}-tile-5`}
               ></div>
             </div>
           );
