@@ -165,21 +165,12 @@ const Main = () => {
     guess.forEach((guess, index) => {
       if (checkWordle.includes(guess.letter)) {
         guess.color = "bg-yellow-300";
-        // checkWordle = checkWordle.replace(guess.letter, "");
       }
 
       if (guess.letter == word[index]) {
         guess.color = "bg-green-300";
       }
     });
-
-    // guess.forEach((guess, index) => {
-
-    //   // checkWordle = checkWordle.replace(guess.letter, "");
-    // });
-
-    console.log(guess);
-    console.log(checkWordle);
 
     rowTiles.forEach((tile: any, index: number) => {
       setTimeout(() => {
@@ -202,20 +193,26 @@ const Main = () => {
     setIsGameOver(false);
 
     const tiles = document.querySelectorAll(".tile");
+    const keys = document.querySelectorAll(".key-button");
+
     tiles.forEach((tile) => {
       tile.textContent = "";
       tile.classList.remove("bg-green-300", "bg-yellow-300", "bg-gray-300");
       tile.removeAttribute("data");
     });
+    keys.forEach((key) => {
+      key.classList.remove("bg-green-300", "bg-yellow-300", "bg-gray-300");
+    });
   };
 
+  console.log(word);
   return (
     <>
       <div className="message-container"></div>
       <button id="restart-button" className="" onClick={restartHandler}>
         Restart
       </button>
-      <div className="tile-container flex flex-col justify-center items-center text-center border w-72 border-black my-3 mx-auto">
+      <div className="tile-container flex flex-col justify-center items-center text-center border w-72 border-black my-3 mx-auto rounded-md">
         {guessRows.map((rows, i) => {
           return (
             <div key={i} id={`guessRow-${i}`} className="flex">
@@ -223,7 +220,7 @@ const Main = () => {
                 return (
                   <div
                     key={j}
-                    className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1"
+                    className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1 rounded-md"
                     id={`guessRow-${i}-tile-${j}`}
                   ></div>
                 );
@@ -237,7 +234,7 @@ const Main = () => {
         {keys.map((elm) => {
           return (
             <button
-              className="w-6 h-6 rounded-md bg-gray-400 m-1 text-white text-sm"
+              className="key-button w-6 h-6 rounded-md bg-gray-400 m-1 text-white text-sm"
               id={elm}
               key={elm}
               onClick={() => handleClick(elm)}
