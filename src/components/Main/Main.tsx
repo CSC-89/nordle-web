@@ -129,7 +129,8 @@ const Main = () => {
 
   const addColorToKey = (keyLetter: string, color: string) => {
     const key = document.getElementById(keyLetter);
-    if (key?.classList.contains("bg-yellow-300") && color == "bg-gray-300") return;
+    if (key?.classList.contains("bg-yellow-300") && color == "bg-gray-300")
+      return;
     if (key?.classList.contains("bg-green-300")) return;
 
     if (key?.classList.contains("bg-gray-300")) {
@@ -188,31 +189,37 @@ const Main = () => {
     });
   };
 
-  // //Restart button
-  // const restartHandler = () => {
+  //Restart button
+  const restartHandler = () => {
+    getWordle();
 
-  //     getWordle();
+    setGuessRows((guessRows) => {
+      guessRows.forEach((row) => row.forEach((tile) => (tile = "")));
+      return guessRows;
+    });
+    setCurrentRow(0);
+    setCurrentTile(0);
+    setIsGameOver(false);
 
-  //     guessRows.forEach(item => item = '');
-  //     currentRow = 0;
-  //     currentTile = 0;
-  //     isGameOver = false;
+    const tiles = document.querySelectorAll(".tile");
+    tiles.forEach((tile) => {
+      tile.textContent = "";
+      tile.classList.remove(
+        "green-300",
+        "bg-yellow-300",
+        "bg-gray-300",
+      );
+      tile.removeAttribute("data");
+    });
+  };
 
-  //     const tiles = document.querySelectorAll(".tile")
-  //     console.log(tiles)
-  //     tiles.forEach(tile => {
-  //         tile.textContent = '';
-  //         tile.classList.remove('green-overlay', 'yellow-overlay', 'grey-overlay', 'flip');
-  //         tile.removeAttribute('data');
-  //     })
-  //   }
-
-  // const restartButton = document.getElementById('restart-button')
-  // restartButton.addEventListener('click', restartHandler);
+  // const restartButton = document.getElementById("restart-button");
+  // restartButton.addEventListener("click", restartHandler);
 
   return (
     <>
       <div className="message-container"></div>
+      <button id="restart-button" className="" onClick={restartHandler}>Restart</button>
       <div className="tile-container flex flex-col justify-center items-center text-center border w-72 border-black my-3 mx-auto">
         {guessRows.map((_elm, i) => {
           return (
