@@ -13,32 +13,29 @@ const Main = () => {
   const [isGameOver, setIsGameOver] = useState(false);
   const [currentRow, setCurrentRow] = useState(0);
   const [currentTile, setCurrentTile] = useState(0);
+  const [guessRows, setGuessRows] = useState([
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+    ["", "", "", "", ""],
+  ]);
   const messageDisplay = document.querySelector(".message-container");
 
   const getWordle = () => {
     axios
       .get("https://localhost:7234/WordleGame/getWord")
-      .then((response) => setWord(response.data.word))
+      .then((response) => {
+        const word = response.data.word as string;
+        setWord(word.toUpperCase());
+      })
       .catch((err) => console.log(err));
   };
 
   useEffect(() => {
     getWordle();
-    console.log(word);
   }, []);
-
-  useEffect(() => {
-    console.log("Current Tile:", currentTile);
-  }, [currentTile]);
-
-  let guessRows = [
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-    ["", "", "", "", ""],
-  ];
 
   const handleClick = (letter: string) => {
     if (!isGameOver) {
@@ -60,7 +57,12 @@ const Main = () => {
         "guessRow-" + currentRow + "-tile-" + currentTile
       );
       tile!.textContent = letter;
-      guessRows[currentRow][currentTile] = letter;
+
+      setGuessRows((guessRows) => {
+        guessRows[currentRow][currentTile] = letter;
+        return guessRows;
+      });
+
       tile!.setAttribute("data", letter);
 
       if (currentTile < 4) setCurrentTile(currentTile + 1);
@@ -68,7 +70,6 @@ const Main = () => {
   };
 
   const deleteLetter = () => {
-
     const deleteMethod = (tileToDelete: number) => {
       const tile = document.getElementById(
         "guessRow-" + currentRow + "-tile-" + tileToDelete
@@ -87,10 +88,8 @@ const Main = () => {
 
   const checkRow = () => {
     const guess = guessRows[currentRow].join("");
-    console.log("Current row:", currentRow);
-    console.log("guess", guess);
-    console.log("guessRows:", guessRows);
-    if (currentTile > 4) {
+    console.log(guess);
+    if (currentTile === 4) {
       axios
         .get(`https://localhost:7234/WordleGame/check?guess=${guess}`)
         .then((response) => response.data.response)
@@ -111,6 +110,7 @@ const Main = () => {
                 return;
               }
               if (currentRow < 5) {
+                console.log("newRow: reached");
                 setCurrentRow(currentRow + 1);
                 setCurrentTile(0);
               }
@@ -187,8 +187,11 @@ const Main = () => {
 
   // const restartButton = document.getElementById('restart-button')
   // restartButton.addEventListener('click', restartHandler);
+
+  console.log("word", word);
   return (
     <>
+    <div className="message-container"></div>
       <div className="tile-container flex flex-col justify-center items-center text-center border w-72 border-black my-3 mx-auto">
         {guessRows.map((_elm, i) => {
           return (
