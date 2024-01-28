@@ -129,6 +129,19 @@ const Main = () => {
 
   const addColorToKey = (keyLetter: string, color: string) => {
     const key = document.getElementById(keyLetter);
+    if (key?.classList.contains("bg-yellow-300") && color == "bg-gray-300") return;
+    if (key?.classList.contains("bg-green-300")) return;
+
+    if (key?.classList.contains("bg-gray-300")) {
+      key!.classList.replace("bg-gray-300", color);
+      return;
+    }
+
+    if (key?.classList.contains("bg-yellow-300")) {
+      key!.classList.replace("bg-yellow-300", color);
+      return;
+    }
+
     key!.classList.add(color);
   };
 
@@ -148,20 +161,21 @@ const Main = () => {
       }
     });
 
-    guess.forEach((guess) => {
+    guess.forEach((guess, index) => {
       if (checkWordle.includes(guess.letter)) {
         guess.color = "bg-yellow-300";
         // checkWordle = checkWordle.replace(guess.letter, "");
       }
-    });
-    
-    guess.forEach((guess, index) => {
+
       if (guess.letter == word[index]) {
         guess.color = "bg-green-300";
       }
-      // checkWordle = checkWordle.replace(guess.letter, "");
     });
-    
+
+    // guess.forEach((guess, index) => {
+
+    //   // checkWordle = checkWordle.replace(guess.letter, "");
+    // });
 
     console.log(guess);
     console.log(checkWordle);
