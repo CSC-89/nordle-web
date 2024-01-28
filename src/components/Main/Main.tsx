@@ -12,7 +12,7 @@ const Main = () => {
   const [word, setWord] = useState<string>("");
   const [isGameOver, setIsGameOver] = useState(false);
   const [currentRow, setCurrentRow] = useState(0);
-  const [currentTile, setCurrentTile] = useState(1);
+  const [currentTile, setCurrentTile] = useState(0);
   const messageDisplay = document.querySelector(".message-container");
 
   const getWordle = () => {
@@ -27,6 +27,9 @@ const Main = () => {
     console.log(word);
   }, []);
 
+  useEffect(() => {
+    console.log("Current Tile:", currentTile);
+  }, [currentTile]);
 
   let guessRows = [
     ["", "", "", "", ""],
@@ -52,7 +55,7 @@ const Main = () => {
   };
 
   const addLetter = (letter: string) => {
-    if (currentTile <= 5 && currentRow < 6) {
+    if (currentTile < 5 && currentRow < 6) {
       const tile = document.getElementById(
         "guessRow-" + currentRow + "-tile-" + currentTile
       );
@@ -60,30 +63,37 @@ const Main = () => {
       guessRows[currentRow][currentTile] = letter;
       tile!.setAttribute("data", letter);
 
-      if(currentTile < 5) setCurrentTile(currentTile + 1);
+      if (currentTile < 4) setCurrentTile(currentTile + 1);
     }
   };
 
   const deleteLetter = () => {
-    if (currentTile > 0) {
-      if (currentTile >1) setCurrentTile(currentTile - 1);
-      console.log(currentTile)
+
+    const deleteMethod = (tileToDelete: number) => {
       const tile = document.getElementById(
-        "guessRow-" + currentRow + "-tile-" + currentTile
+        "guessRow-" + currentRow + "-tile-" + tileToDelete
       );
       tile!.textContent = "";
-      guessRows[currentRow][currentTile] = "";
+      guessRows[currentRow][tileToDelete] = "";
       tile!.setAttribute("data", "");
+    };
+
+    if (currentTile > 0) {
+      setCurrentTile(currentTile - 1);
+      if (currentTile === 4) return deleteMethod(currentTile);
     }
+    if (currentTile >= 0) deleteMethod(currentTile);
   };
 
   const checkRow = () => {
     const guess = guessRows[currentRow].join("");
-    console.log(guess);
+    console.log("Current row:", currentRow);
+    console.log("guess", guess);
+    console.log("guessRows:", guessRows);
     if (currentTile > 4) {
       axios
-      .get(`https://localhost:7234/WordleGame/check?guess=${guess}`)
-      .then((response) => response.data.response)
+        .get(`https://localhost:7234/WordleGame/check?guess=${guess}`)
+        .then((response) => response.data.response)
         .then((response) => {
           if (!response) {
             showMessage("Word not in list.");
@@ -120,16 +130,15 @@ const Main = () => {
   };
 
   const addColorToKey = (keyLetter: string, color: string) => {
-      const key = document.getElementById(keyLetter)
-      key!.classList.add(color)
-  }
+    const key = document.getElementById(keyLetter);
+    key!.classList.add(color);
+  };
 
   const flipTile = () => {
     let checkWordle = word;
     const guess: Guess[] = [];
-    const rowTiles = document.getElementById(
-      "guessRow-" + currentRow
-    )!.childNodes as any;
+    const rowTiles = document.getElementById("guessRow-" + currentRow)!
+      .childNodes as any;
 
     rowTiles.forEach((tile: any) => {
       guess.push({ letter: tile.getAttribute("data"), color: "grey-overlay" });
@@ -186,6 +195,10 @@ const Main = () => {
             <div key={i} id={`guessRow-${i}`} className="flex">
               <div
                 className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1"
+                id={`guessRow-${i}-tile-0`}
+              ></div>
+              <div
+                className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1"
                 id={`guessRow-${i}-tile-1`}
               ></div>
               <div
@@ -199,10 +212,6 @@ const Main = () => {
               <div
                 className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1"
                 id={`guessRow-${i}-tile-4`}
-              ></div>
-              <div
-                className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1"
-                id={`guessRow-${i}-tile-5`}
               ></div>
             </div>
           );
