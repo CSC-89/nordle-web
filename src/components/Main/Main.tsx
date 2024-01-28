@@ -65,11 +65,12 @@ const Main = () => {
 
       tile!.setAttribute("data", letter);
 
-      if (currentTile < 4) setCurrentTile(currentTile + 1);
+      if (currentTile < 5) setCurrentTile(currentTile + 1);
     }
   };
 
   const deleteLetter = () => {
+    const prevTile = currentTile -1
     const deleteMethod = (tileToDelete: number) => {
       const tile = document.getElementById(
         "guessRow-" + currentRow + "-tile-" + tileToDelete
@@ -80,10 +81,9 @@ const Main = () => {
     };
 
     if (currentTile > 0) {
-      setCurrentTile(currentTile - 1);
-      if (currentTile === 4) return deleteMethod(currentTile);
+      setCurrentTile(prevTile);
+      if (currentTile >= 0) deleteMethod(prevTile);
     }
-    if (currentTile >= 0) deleteMethod(currentTile);
   };
 
   const checkRow = () => {
