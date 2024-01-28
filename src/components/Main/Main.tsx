@@ -70,7 +70,7 @@ const Main = () => {
   };
 
   const deleteLetter = () => {
-    const prevTile = currentTile -1
+    const prevTile = currentTile - 1;
     const deleteMethod = (tileToDelete: number) => {
       const tile = document.getElementById(
         "guessRow-" + currentRow + "-tile-" + tileToDelete
@@ -88,13 +88,12 @@ const Main = () => {
 
   const checkRow = () => {
     const guess = guessRows[currentRow].join("");
-    console.log(guess);
-    if (currentTile === 4) {
+    if (currentTile > 4) {
       axios
         .get(`https://localhost:7234/WordleGame/check?guess=${guess}`)
         .then((response) => response.data.response)
-        .then((response) => {
-          if (!response) {
+        .then((data) => {
+          if (!data) {
             showMessage("Word not in list.");
             return;
           } else {
@@ -110,7 +109,6 @@ const Main = () => {
                 return;
               }
               if (currentRow < 5) {
-                console.log("newRow: reached");
                 setCurrentRow(currentRow + 1);
                 setCurrentTile(0);
               }
@@ -137,30 +135,40 @@ const Main = () => {
   const flipTile = () => {
     let checkWordle = word;
     const guess: Guess[] = [];
-    const rowTiles = document.getElementById("guessRow-" + currentRow)!
-      .childNodes as any;
+    const rowTiles = document.getElementById(
+      "guessRow-" + currentRow
+    )!.childNodes;
 
-    rowTiles.forEach((tile: any) => {
-      guess.push({ letter: tile.getAttribute("data"), color: "grey-overlay" });
+    rowTiles.forEach((tile) => {
+      if (tile instanceof HTMLElement) {
+        guess.push({
+          letter: tile.getAttribute("data") as string,
+          color: "bg-gray-300",
+        });
+      }
     });
 
     guess.forEach((guess, index) => {
+      if (checkWordle.includes(guess.letter)) {
+        guess.color = "bg-yellow-300";
+        checkWordle = checkWordle.replace(guess.letter, "");
+      }
+      
       if (guess.letter == word[index]) {
-        guess.color = "green-overlay";
+        guess.color = "bg-green-300";
         checkWordle = checkWordle.replace(guess.letter, "");
       }
     });
 
-    guess.forEach((guess) => {
-      if (checkWordle.includes(guess.letter)) {
-        guess.color = "yellow-overlay";
-        checkWordle = checkWordle.replace(guess.letter, "");
-      }
-    });
+    // guess.forEach((guess, index) => {
+      
+    // });
+
+    console.log(guess);
 
     rowTiles.forEach((tile: any, index: number) => {
       setTimeout(() => {
-        tile.classList.add(guess[index].color, "flip");
+        tile.classList.add(guess[index].color, "animate__flipOutY");
         addColorToKey(guess[index].letter, guess[index].color);
       }, 500 * index);
     });
@@ -188,10 +196,9 @@ const Main = () => {
   // const restartButton = document.getElementById('restart-button')
   // restartButton.addEventListener('click', restartHandler);
 
-  console.log("word", word);
   return (
     <>
-    <div className="message-container"></div>
+      <div className="message-container"></div>
       <div className="tile-container flex flex-col justify-center items-center text-center border w-72 border-black my-3 mx-auto">
         {guessRows.map((_elm, i) => {
           return (
