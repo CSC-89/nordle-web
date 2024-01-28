@@ -206,9 +206,9 @@ const Main = () => {
   };
 
   return (
-    <>
+    <main className="flex flex-col justify-center items-center">
       <div className="message-container"></div>
-      <button id="restart-button" className="" onClick={restartHandler}>
+      <button id="restart-button" className="rounded-md bg-blue-200 p-3 m-3 hover:bg-red-200" onClick={restartHandler}>
         Restart
       </button>
       <div className="tile-container flex flex-col justify-center items-center text-center border w-72 border-black my-3 mx-auto rounded-md">
@@ -229,7 +229,7 @@ const Main = () => {
         })}
       </div>
 
-      <div className="key-container w-screen">
+      <div className="key-container flex flex-wrap justify-center items-center md:w-96">
         {keys.map((elm) => {
           return (
             <button
@@ -243,7 +243,7 @@ const Main = () => {
           );
         })}
       </div>
-    </>
+    </ main>
   );
 };
 
