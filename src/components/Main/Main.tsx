@@ -205,7 +205,6 @@ const Main = () => {
     });
   };
 
-  console.log(word);
   return (
     <>
       <div className="message-container"></div>
