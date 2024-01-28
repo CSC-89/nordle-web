@@ -183,7 +183,7 @@ const Main = () => {
 
     rowTiles.forEach((tile: any, index: number) => {
       setTimeout(() => {
-        tile.classList.add(guess[index].color, "animate__flipOutY");
+        tile.classList.add(guess[index].color, "flip");
         addColorToKey(guess[index].letter, guess[index].color);
       }, 500 * index);
     });
@@ -204,46 +204,30 @@ const Main = () => {
     const tiles = document.querySelectorAll(".tile");
     tiles.forEach((tile) => {
       tile.textContent = "";
-      tile.classList.remove(
-        "green-300",
-        "bg-yellow-300",
-        "bg-gray-300",
-      );
+      tile.classList.remove("bg-green-300", "bg-yellow-300", "bg-gray-300");
       tile.removeAttribute("data");
     });
   };
 
-  // const restartButton = document.getElementById("restart-button");
-  // restartButton.addEventListener("click", restartHandler);
-
   return (
     <>
       <div className="message-container"></div>
-      <button id="restart-button" className="" onClick={restartHandler}>Restart</button>
+      <button id="restart-button" className="" onClick={restartHandler}>
+        Restart
+      </button>
       <div className="tile-container flex flex-col justify-center items-center text-center border w-72 border-black my-3 mx-auto">
-        {guessRows.map((_elm, i) => {
+        {guessRows.map((rows, i) => {
           return (
             <div key={i} id={`guessRow-${i}`} className="flex">
-              <div
-                className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1"
-                id={`guessRow-${i}-tile-0`}
-              ></div>
-              <div
-                className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1"
-                id={`guessRow-${i}-tile-1`}
-              ></div>
-              <div
-                className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1"
-                id={`guessRow-${i}-tile-2`}
-              ></div>
-              <div
-                className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1"
-                id={`guessRow-${i}-tile-3`}
-              ></div>
-              <div
-                className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1"
-                id={`guessRow-${i}-tile-4`}
-              ></div>
+              {rows.map((_tiles, j) => {
+                return (
+                  <div
+                    key={j}
+                    className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1"
+                    id={`guessRow-${i}-tile-${j}`}
+                  ></div>
+                );
+              })}
             </div>
           );
         })}
