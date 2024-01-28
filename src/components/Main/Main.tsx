@@ -148,23 +148,23 @@ const Main = () => {
       }
     });
 
-    guess.forEach((guess, index) => {
+    guess.forEach((guess) => {
       if (checkWordle.includes(guess.letter)) {
         guess.color = "bg-yellow-300";
-        checkWordle = checkWordle.replace(guess.letter, "");
-      }
-      
-      if (guess.letter == word[index]) {
-        guess.color = "bg-green-300";
-        checkWordle = checkWordle.replace(guess.letter, "");
+        // checkWordle = checkWordle.replace(guess.letter, "");
       }
     });
-
-    // guess.forEach((guess, index) => {
-      
-    // });
+    
+    guess.forEach((guess, index) => {
+      if (guess.letter == word[index]) {
+        guess.color = "bg-green-300";
+      }
+      // checkWordle = checkWordle.replace(guess.letter, "");
+    });
+    
 
     console.log(guess);
+    console.log(checkWordle);
 
     rowTiles.forEach((tile: any, index: number) => {
       setTimeout(() => {
