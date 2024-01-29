@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
+import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { keyboard as keys } from "../../keys/keys";
 import "./Main.css";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 type Guess = {
   letter: string;
@@ -24,7 +23,7 @@ const Main = () => {
     ["", "", "", "", ""],
     ["", "", "", "", ""],
   ]);
-  const messageDisplay = document.querySelector(".message-container");
+  const currentTileRef = useRef(currentTile);
 
   const getWordle = () => {
     axios
@@ -37,9 +36,14 @@ const Main = () => {
   };
 
   useEffect(() => {
+    currentTileRef.current = currentTile;
+  }, [currentTile]);
+
+  useEffect(() => {
     getWordle();
-    document.addEventListener("keyup", (evt) => handleKeyPress(evt.key));
+    window.addEventListener("keyup", handleKeyPress);
   }, []);
+
 
   const handleClick = (letter: string) => {
     if (!isGameOver) {
@@ -53,62 +57,74 @@ const Main = () => {
     }
   };
 
-  const handleKeyPress = (key: string) => {
-    const letter = key.toUpperCase();
-
-    if (!keys.find((x) => x == letter)) {
+  const handleKeyPress = (evt: KeyboardEvent) => {
+    let letter = evt.key.toUpperCase();
+    if(letter == "BACKSPACE") {
+      letter = "BACK";
+    }
+    if (!keys.includes(letter) || isGameOver) {
       return;
     }
 
-    if (!isGameOver) {
-      switch (letter) {
-        case "BACK":
-          return deleteLetter();
-        case "ENTER":
-          return checkRow();
-      }
-      addLetter(letter);
+    switch (letter) {
+      case "BACK":
+        return deleteLetter();
+      case "ENTER":
+        return checkRow();
+      default:
+        addLetter(letter);
+        break;
     }
   };
 
   const addLetter = (letter: string) => {
-    if (currentTile < 5 && currentRow < 6) {
+    if (currentTileRef.current < 5 && currentRow < 6) {
       const tile = document.getElementById(
-        "guessRow-" + currentRow + "-tile-" + currentTile
+        "guessRow-" + currentRow + "-tile-" + currentTileRef.current
       );
       tile!.textContent = letter;
 
       setGuessRows((guessRows) => {
-        guessRows[currentRow][currentTile] = letter;
+        guessRows[currentRow][currentTileRef.current] = letter;
         return guessRows;
       });
 
       tile!.setAttribute("data", letter);
-      console.log(currentTile);
-      if (currentTile < 5) setCurrentTile(currentTile + 1);
+
+      setCurrentTile((prevTile) => {
+        if (prevTile < 5) return prevTile + 1;
+        return prevTile;
+      });
     }
   };
 
   const deleteLetter = () => {
-    const prevTile = currentTile - 1;
+    const prevTile = currentTileRef.current - 1;
+  
     const deleteMethod = (tileToDelete: number) => {
       const tile = document.getElementById(
         "guessRow-" + currentRow + "-tile-" + tileToDelete
       );
       tile!.textContent = "";
-      guessRows[currentRow][tileToDelete] = "";
+      setGuessRows((guessRows) => {
+        guessRows[currentRow][tileToDelete] = "";
+        return guessRows;
+      });
       tile!.setAttribute("data", "");
     };
-
-    if (currentTile > 0) {
-      setCurrentTile(prevTile);
-      if (currentTile >= 0) deleteMethod(prevTile);
+  
+    if (currentTileRef.current > 0) {
+      setCurrentTile((prevTile) => {
+        if (prevTile > 0) return prevTile - 1;
+        return prevTile;
+      });
+      deleteMethod(prevTile);
     }
   };
 
   const checkRow = () => {
     const guess = guessRows[currentRow].join("");
-    if (currentTile > 4) {
+    if (currentTileRef.current > 4) {
       axios
         .get(`https://localhost:7234/WordleGame/check?guess=${guess}`)
         .then((response) => response.data.response)
@@ -125,7 +141,7 @@ const Main = () => {
               if (currentRow >= 5) {
                 setIsGameOver(true);
 
-                showMessage("Game Over..");
+                showMessage(`Game Over..`);
                 return;
               }
               if (currentRow < 5) {
@@ -139,19 +155,22 @@ const Main = () => {
   };
 
   const showMessage = (message: string) => {
-    switch(message) {
-      case "Word not in list." : toast.warn(message, {
-        autoClose: 2000
-      });
-      return;
-      case "You got it!" : toast.success(message, {
-        autoClose: false
-      });
-      return;
-      case "Game Over.." : toast.error(message, {
-        autoClose: false
-      });
-      return;
+    switch (message) {
+      case "Word not in list.":
+        toast.warn(message, {
+          autoClose: 2000,
+        });
+        return;
+      case "You got it!":
+        toast.success(message, {
+          autoClose: false,
+        });
+        return;
+      case "Game Over..":
+        toast.error(`${message} The correct answer was ${word}`, {
+          autoClose: false,
+        });
+        return;
     }
   };
 
@@ -234,8 +253,11 @@ const Main = () => {
   };
 
   return (
-    <main className="flex flex-col justify-center items-center">
-      <ToastContainer position="top-left"/>
+    <main
+      id="main-container"
+      className="flex flex-col justify-center items-center"
+    >
+      <ToastContainer position="top-left" />
       <div className="message-container"></div>
       <button
         id="restart-button"
