@@ -1,4 +1,4 @@
-import { SyntheticEvent, useEffect, useState } from "react";
+import { KeyboardEventHandler, SyntheticEvent, useEffect, useState } from "react";
 import axios from "axios";
 import { keyboard as keys } from "../../keys/keys";
 import "./Main.css";
@@ -36,7 +36,7 @@ const Main = () => {
 
   useEffect(() => {
     getWordle();
-    window.addEventListener("keyup", handleKeyPress);
+    //window.addEventListener("keyup", handleKeyPress);
   }, []);
 
   const handleClick = (letter: string) => {
@@ -51,8 +51,8 @@ const Main = () => {
     }
   };
 
-  const handleKeyPress = (evt: KeyboardEvent) => {
-    let letter = evt.key.toUpperCase();
+  const handleKeyPress = (key: string) => {
+    let letter = key.toUpperCase();
 
     if (letter === "BACKSPACE") {
       letter = "BACK";
@@ -220,7 +220,7 @@ const Main = () => {
     getWordle();
 
     setGuessRows((guessRows) => {
-      guessRows.forEach((row) => row.forEach((tile) => (tile = "")));
+      guessRows.forEach((row) => row.forEach(tile => tile = ""));
       return guessRows;
     });
     setCurrentRow(0);
@@ -242,49 +242,53 @@ const Main = () => {
 
   return (
     <main
+      tabIndex={0}
       id="main-container"
-      className="flex flex-col justify-center items-center"
+      className="outline-none"
+      onKeyDown={(evt) => handleKeyPress(evt.key)}
     >
-      <ToastContainer position="top-left" />
-      <div className="message-container"></div>
-      <button
-        id="restart-button"
-        className="rounded-md bg-blue-200 p-3 m-3 hover:bg-red-200"
-        onClick={restartHandler}
-      >
-        Restart
-      </button>
-      <div className="tile-container flex flex-col justify-center items-center text-center border w-72 border-black my-3 mx-auto rounded-md">
-        {guessRows.map((rows, i) => {
-          return (
-            <div key={i} id={`guessRow-${i}`} className="flex">
-              {rows.map((_tiles, j) => {
-                return (
-                  <div
-                    key={j}
-                    className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1 rounded-md"
-                    id={`guessRow-${i}-tile-${j}`}
-                  ></div>
-                );
-              })}
-            </div>
-          );
-        })}
-      </div>
+      <div tabIndex={1} className="flex flex-col justify-center items-center outline-none">
+        <ToastContainer position="top-left" />
+        <div className="message-container"></div>
+        <button
+          id="restart-button"
+          className="rounded-md bg-blue-200 p-3 m-3 hover:bg-red-200"
+          onClick={restartHandler}
+        >
+          Restart
+        </button>
+        <div className="tile-container flex flex-col justify-center items-center text-center border w-72 border-black my-3 mx-auto rounded-md">
+          {guessRows.map((rows, i) => {
+            return (
+              <div key={i} id={`guessRow-${i}`} className="flex">
+                {rows.map((_tiles, j) => {
+                  return (
+                    <div
+                      key={j}
+                      className="tile w-12 h-12 border-2 border-black flex justify-center items-center text-black m-1 rounded-md"
+                      id={`guessRow-${i}-tile-${j}`}
+                    ></div>
+                  );
+                })}
+              </div>
+            );
+          })}
+        </div>
 
-      <div className="key-container grid grid-cols-11 w-72 justify-center items-center md:w-auto">
-        {keys.map((elm) => {
-          return (
-            <button
-              className="key-button h-10 rounded-md bg-gray-400 m-0.5 text-white text-sm"
-              id={elm}
-              key={elm}
-              onClick={() => handleClick(elm)}
-            >
-              {elm}
-            </button>
-          );
-        })}
+        <div className="key-container grid grid-cols-11 w-72 justify-center items-center md:w-auto">
+          {keys.map((elm) => {
+            return (
+              <button
+                className="key-button h-10 rounded-md bg-gray-400 m-0.5 text-white text-sm"
+                id={elm}
+                key={elm}
+                onClick={() => handleClick(elm)}
+              >
+                {elm}
+              </button>
+            );
+          })}
+        </div>
       </div>
     </main>
   );
