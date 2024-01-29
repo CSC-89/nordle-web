@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { keyboard as keys } from "../../keys/keys";
 import "./Main.css";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 type Guess = {
   letter: string;
@@ -35,17 +38,34 @@ const Main = () => {
 
   useEffect(() => {
     getWordle();
+    document.addEventListener("keyup", (evt) => handleKeyPress(evt.key));
   }, []);
 
   const handleClick = (letter: string) => {
     if (!isGameOver) {
-      if (letter === "BACK") {
-        deleteLetter();
-        return;
+      switch (letter) {
+        case "BACK":
+          return deleteLetter();
+        case "ENTER":
+          return checkRow();
       }
-      if (letter === "ENTER") {
-        checkRow();
-        return;
+      addLetter(letter);
+    }
+  };
+
+  const handleKeyPress = (key: string) => {
+    const letter = key.toUpperCase();
+
+    if (!keys.find((x) => x == letter)) {
+      return;
+    }
+
+    if (!isGameOver) {
+      switch (letter) {
+        case "BACK":
+          return deleteLetter();
+        case "ENTER":
+          return checkRow();
       }
       addLetter(letter);
     }
@@ -64,7 +84,7 @@ const Main = () => {
       });
 
       tile!.setAttribute("data", letter);
-
+      console.log(currentTile);
       if (currentTile < 5) setCurrentTile(currentTile + 1);
     }
   };
@@ -119,12 +139,20 @@ const Main = () => {
   };
 
   const showMessage = (message: string) => {
-    const messageElement = document.createElement("p");
-    messageElement.textContent = message;
-    messageDisplay!.append(messageElement);
-    setTimeout(() => {
-      messageDisplay!.removeChild(messageElement);
-    }, 2000);
+    switch(message) {
+      case "Word not in list." : toast.warn(message, {
+        autoClose: 2000
+      });
+      return;
+      case "You got it!" : toast.success(message, {
+        autoClose: false
+      });
+      return;
+      case "Game Over.." : toast.error(message, {
+        autoClose: false
+      });
+      return;
+    }
   };
 
   const addColorToKey = (keyLetter: string, color: string) => {
@@ -207,8 +235,13 @@ const Main = () => {
 
   return (
     <main className="flex flex-col justify-center items-center">
+      <ToastContainer position="top-left"/>
       <div className="message-container"></div>
-      <button id="restart-button" className="rounded-md bg-blue-200 p-3 m-3 hover:bg-red-200" onClick={restartHandler}>
+      <button
+        id="restart-button"
+        className="rounded-md bg-blue-200 p-3 m-3 hover:bg-red-200"
+        onClick={restartHandler}
+      >
         Restart
       </button>
       <div className="tile-container flex flex-col justify-center items-center text-center border w-72 border-black my-3 mx-auto rounded-md">
@@ -243,7 +276,7 @@ const Main = () => {
           );
         })}
       </div>
-    </ main>
+    </main>
   );
 };
 
