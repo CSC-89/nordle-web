@@ -27,7 +27,7 @@ const Main = () => {
 
   const getWordle = () => {
     axios
-      .get("https://localhost:7234/WordleGame/getWord")
+      .get("https://norwegianwordleapi.azurewebsites.net/WordleGame/getWord")
       .then((response) => {
         const word = response.data.word as string;
         setWord(word.toUpperCase());
@@ -115,7 +115,7 @@ const Main = () => {
     const guess = guessRows[currentRow].join("");
     if (currentTile > 4) {
       axios
-        .get(`https://localhost:7234/WordleGame/check?guess=${guess}`)
+        .get(`https://norwegianwordleapi.azurewebsites.net/WordleGame/check?guess=${guess}`)
         .then((response) => response.data.response)
         .then((data) => {
           if (!data) {
