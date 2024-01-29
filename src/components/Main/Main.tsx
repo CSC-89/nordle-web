@@ -224,6 +224,7 @@ const Main = () => {
       guessRows.forEach((row) =>
         row.forEach((tile) => {
           tile = "";
+          return tile;
         })
       );
       return guessRows;
