@@ -32,7 +32,9 @@ const Main = () => {
         const word = response.data.word as string;
         setWord(word.toUpperCase());
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        throw new Error(err);
+      });
   };
 
   useEffect(() => {
@@ -87,7 +89,6 @@ const Main = () => {
       });
 
       tile!.setAttribute("data", letter);
-      console.log(currentTile);
       if (currentTile < 5) setCurrentTile((currentTile) => currentTile + 1);
     }
   };
@@ -110,12 +111,12 @@ const Main = () => {
   };
 
   const checkRow = () => {
-    console.log("hit");
-    console.log(`Current Tile: ${currentTile}`);
     const guess = guessRows[currentRow].join("");
     if (currentTile > 4) {
       axios
-        .get(`https://norwegianwordleapi.azurewebsites.net/WordleGame/check?guess=${guess}`)
+        .get(
+          `https://norwegianwordleapi.azurewebsites.net/WordleGame/check?guess=${guess}`
+        )
         .then((response) => response.data.response)
         .then((data) => {
           if (!data) {
