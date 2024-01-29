@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { keyboard as keys } from "../../keys/keys";
 import "./Main.css";
-import logo from '../../assets/logo.svg';
+import logo from "../../assets/logo.svg";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -221,7 +221,11 @@ const Main = () => {
     getWordle();
 
     setGuessRows((guessRows) => {
-      guessRows.forEach((row) => row.forEach(tile => tile = ""));
+      guessRows.forEach((row) =>
+        row.forEach((tile) => {
+          tile = "";
+        })
+      );
       return guessRows;
     });
     setCurrentRow(0);
@@ -248,7 +252,10 @@ const Main = () => {
       className="outline-none"
       onKeyDown={(evt) => handleKeyPress(evt.key)}
     >
-      <div tabIndex={1} className="flex flex-col justify-center items-center outline-none">
+      <div
+        tabIndex={1}
+        className="flex flex-col justify-center items-center outline-none"
+      >
         <ToastContainer position="top-left" />
         <img src={logo} alt="logo" className="w-64 mt-5" />
         <p className="mb-5 text-sm  italic">Den norske wordle</p>
