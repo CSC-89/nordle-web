@@ -229,11 +229,11 @@ const Main = () => {
         })}
       </div>
 
-      <div className="key-container flex flex-wrap justify-center items-center md:w-96">
+      <div className="key-container grid grid-cols-11 w-72 justify-center items-center md:w-auto">
         {keys.map((elm) => {
           return (
             <button
-              className="key-button w-6 h-6 rounded-md bg-gray-400 m-1 text-white text-sm"
+              className="key-button h-10 rounded-md bg-gray-400 m-0.5 text-white text-sm"
               id={elm}
               key={elm}
               onClick={() => handleClick(elm)}
