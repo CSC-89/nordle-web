@@ -1,4 +1,4 @@
-import { KeyboardEventHandler, SyntheticEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { keyboard as keys } from "../../keys/keys";
 import "./Main.css";

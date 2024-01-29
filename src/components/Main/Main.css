@@ -37,10 +37,6 @@
 
 @media screen and (min-width: 768px) {
   /* CSS goes here */
-  .key-container button:nth-child(23) {
-    /* margin-left: 10px; */
-  }
-
   .key-container button:nth-child(23),
   .key-container button:nth-child(31) {
     width: 50px;
