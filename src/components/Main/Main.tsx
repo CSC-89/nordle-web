@@ -52,14 +52,18 @@ const Main = () => {
   };
 
   const handleKeyPress = (evt: KeyboardEvent) => {
-    const letter = evt.key.toUpperCase();
-    console.log(letter);
+    let letter = evt.key.toUpperCase();
+
+    if (letter === "BACKSPACE") {
+      letter = "BACK";
+    }
+
     if (!keys.includes(letter) || isGameOver) {
       return;
     }
 
     switch (letter) {
-      case "BACKSPACE":
+      case "BACK":
         return deleteLetter();
       case "ENTER":
         return checkRow();
