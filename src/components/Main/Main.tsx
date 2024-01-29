@@ -24,6 +24,8 @@ const Main = () => {
     ["", "", "", "", ""],
   ]);
   const currentTileRef = useRef(currentTile);
+  const currentRowRef = useRef(currentRow);
+  const wordRef = useRef(word);
 
   const getWordle = () => {
     axios
@@ -38,6 +40,14 @@ const Main = () => {
   useEffect(() => {
     currentTileRef.current = currentTile;
   }, [currentTile]);
+  
+  useEffect(() => {
+    currentRowRef.current = currentRow;
+  }, [currentRow]);
+
+  useEffect(() => {
+    wordRef.current = word;
+  }, [word]);
 
   useEffect(() => {
     getWordle();
@@ -78,16 +88,18 @@ const Main = () => {
   };
 
   const addLetter = (letter: string) => {
-    if (currentTileRef.current < 5 && currentRow < 6) {
+    if (currentTileRef.current < 5 && currentRowRef.current < 6) {
       const tile = document.getElementById(
-        "guessRow-" + currentRow + "-tile-" + currentTileRef.current
+        "guessRow-" + currentRowRef.current + "-tile-" + currentTileRef.current
       );
       tile!.textContent = letter;
-
+        console.log(currentRowRef.current);
       setGuessRows((guessRows) => {
-        guessRows[currentRow][currentTileRef.current] = letter;
+        guessRows[currentRowRef.current][currentTileRef.current] = letter;
         return guessRows;
       });
+
+      console.log(guessRows)
 
       tile!.setAttribute("data", letter);
 
@@ -103,11 +115,11 @@ const Main = () => {
   
     const deleteMethod = (tileToDelete: number) => {
       const tile = document.getElementById(
-        "guessRow-" + currentRow + "-tile-" + tileToDelete
+        "guessRow-" + currentRowRef.current + "-tile-" + tileToDelete
       );
       tile!.textContent = "";
       setGuessRows((guessRows) => {
-        guessRows[currentRow][tileToDelete] = "";
+        guessRows[currentRowRef.current][tileToDelete] = "";
         return guessRows;
       });
       tile!.setAttribute("data", "");
@@ -123,7 +135,7 @@ const Main = () => {
   };
 
   const checkRow = () => {
-    const guess = guessRows[currentRow].join("");
+    const guess = guessRows[currentRowRef.current].join("");
     if (currentTileRef.current > 4) {
       axios
         .get(`https://localhost:7234/WordleGame/check?guess=${guess}`)
@@ -134,18 +146,19 @@ const Main = () => {
             return;
           } else {
             flipTile();
-            if (word == guess) {
+            if (wordRef.current == guess) {
               showMessage("You got it!");
               setIsGameOver(true);
             } else {
-              if (currentRow >= 5) {
+              if (currentRowRef.current >= 5) {
                 setIsGameOver(true);
 
                 showMessage(`Game Over..`);
                 return;
               }
-              if (currentRow < 5) {
-                setCurrentRow(currentRow + 1);
+              if (currentRowRef.current < 5) {
+                console.log("hit: ", currentRowRef.current)
+                setCurrentRow(prevRow => prevRow + 1);
                 setCurrentTile(0);
               }
             }
@@ -197,7 +210,7 @@ const Main = () => {
     let checkWordle = word;
     const guess: Guess[] = [];
     const rowTiles = document.getElementById(
-      "guessRow-" + currentRow
+      "guessRow-" + currentRowRef.current
     )!.childNodes;
 
     rowTiles.forEach((tile) => {
@@ -251,7 +264,7 @@ const Main = () => {
       key.classList.remove("bg-green-300", "bg-yellow-300", "bg-gray-300");
     });
   };
-
+  console.log(word);
   return (
     <main
       id="main-container"
