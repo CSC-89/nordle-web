@@ -2,6 +2,7 @@ import { KeyboardEventHandler, SyntheticEvent, useEffect, useState } from "react
 import axios from "axios";
 import { keyboard as keys } from "../../keys/keys";
 import "./Main.css";
+import logo from '../../assets/logo.svg';
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -249,10 +250,12 @@ const Main = () => {
     >
       <div tabIndex={1} className="flex flex-col justify-center items-center outline-none">
         <ToastContainer position="top-left" />
+        <img src={logo} alt="logo" className="w-64 mt-5" />
+        <p className="mb-5 text-sm  italic">Den norske wordle</p>
         <div className="message-container"></div>
         <button
           id="restart-button"
-          className="rounded-md bg-blue-200 p-3 m-3 hover:bg-red-200"
+          className="rounded-md bg-blue-200 p-3 mx-3 mb-3 hover:bg-red-200"
           onClick={restartHandler}
         >
           Restart
@@ -275,7 +278,7 @@ const Main = () => {
           })}
         </div>
 
-        <div className="key-container grid grid-cols-11 w-72 justify-center items-center md:w-auto">
+        <div className="key-container grid grid-cols-11 w-72 justify-center items-center md:w-auto mb-5">
           {keys.map((elm) => {
             return (
               <button
