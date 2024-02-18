@@ -12,7 +12,7 @@ type Guess = {
 };
 
 const Main = () => {
-  const [word, setWord] = useState<string>("");
+  const [word, setWord] = useState("");
   const [isGameOver, setIsGameOver] = useState(false);
   const [currentRow, setCurrentRow] = useState(0);
   const [currentTile, setCurrentTile] = useState(0);
@@ -39,7 +39,6 @@ const Main = () => {
 
   useEffect(() => {
     getWordle();
-    //window.addEventListener("keyup", handleKeyPress);
   }, []);
 
   const handleClick = (letter: string) => {
