@@ -184,13 +184,13 @@ const Main = () => {
   };
 
   const flipTile = () => {
-    let checkWordle = word;
+    const checkWordle = word;
     const guess: Guess[] = [];
     const rowTiles = document.getElementById(
       "guessRow-" + currentRow
     )!.childNodes;
 
-    rowTiles.forEach((tile) => {
+    rowTiles.forEach((tile: ChildNode) => {
       if (tile instanceof HTMLElement) {
         guess.push({
           letter: tile.getAttribute("data") as string,
@@ -209,9 +209,11 @@ const Main = () => {
       }
     });
 
-    rowTiles.forEach((tile: any, index: number) => {
+    rowTiles.forEach((tile: ChildNode, index: number) => {
       setTimeout(() => {
-        tile.classList.add(guess[index].color, "flip");
+        if(tile instanceof HTMLElement) {
+          tile.classList.add(guess[index].color, "flip");
+        }
         addColorToKey(guess[index].letter, guess[index].color);
       }, 500 * index);
     });
